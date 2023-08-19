@@ -1,16 +1,14 @@
 const auth = require("../Middleware/auth");
+const express = require("express"); 
+const router = express.Router();
 
-module.exports = function (app) {
-  app.use(function (req, res, next) {
+router.use(function (req, res, next) {
     next();
-  });
+});
 
-  //login route
-  app.post("/auth/login", auth.login);
+router.post("/login", auth.login);
+router.post("/register", auth.register);
+router.post("/verify", auth.verify);
 
-  //register route
-  app.post("/auth/register", auth.register);
 
-  //verify route
-  app.post("/auth/verify", auth.verify);
-};
+module.exports = router;

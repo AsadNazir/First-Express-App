@@ -1,35 +1,53 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import '../assets/CSS/home.css'
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Home() {
+
+    const navigate = useNavigate();
+    const dataFetched = useRef(false);
+
+    const [verified, setVerified] = useState(false);
 
     const verify = async () => {
 
         let token = JSON.parse(localStorage.getItem('userToken'));
-        //console.log(token);
-        let results = await fetch('http://localhost:3000/verify', {
+
+        let results = await fetch('http://localhost:3000/user/home', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
+                "Authorization": `Bearer ${token.Token}`
             }
         })
 
         let data = await results.json();
+
         console.log(data);
+
+        if (data.Error) {
+            alert('You are not authorized to view this page');
+            return;
+        }
+        else
+            setVerified(true);
+
     }
 
     useEffect(() => {
+        if (dataFetched.current) return;
+        dataFetched.current = true;
+
         verify();
     }, [])
 
 
 
-
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <div className="container-fluid">
+            {verified ? <div className="container-fluid">
                 <a className="navbar-brand" href="#">Navbar</a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -55,7 +73,9 @@ export default function Home() {
                         <button className="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
-            </div>
+            </div> : <h1>Not Verified</h1>}
+
         </nav>
+
     )
 }

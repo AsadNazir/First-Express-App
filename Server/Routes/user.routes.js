@@ -1,15 +1,14 @@
 const auth = require("../Middleware/auth");
+const express = require("express");
+const router = express.Router();
 
-module.exports = function (app) {
-  app.use(function (req, res, next) {
-    next();
-  });
+router.post(
+  "/Home",
+  [auth.verify], // Middleware
+  (req, res) => {
+    // Route handler
+    res.json({ message: "Protected route accessed successfully" });
+  }
+);
 
-  app.post(
-    "/user/Home",
-    [auth.verify, auth.isAdministrator],
-    function (req, res) {
-      res.send("Hello Admin!");
-    }
-  );
-};
+module.exports = router;

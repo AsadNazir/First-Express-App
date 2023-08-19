@@ -1,3 +1,4 @@
+const { json } = require("body-parser");
 const userModel = require("../Model/user.model");
 const jwt = require("jsonwebtoken");
 
@@ -8,13 +9,14 @@ const login = async (req, res) => {
     req.body.name,
     req.body.password
   );
-  const token = jwt.sign(
-    { id: results[0].id, name: results[0].name },
-    secretKey,
-    { expiresIn: "1h" }
-  );
 
   if (results.length > 0) {
+    const token = jwt.sign(
+      { id: results[0].id, name: results[0].name },
+      secretKey,
+      { expiresIn: "1h" }
+    );
+
     res.json({
       Error: false,
       Message: "Success",
@@ -26,7 +28,7 @@ const login = async (req, res) => {
       Error: true,
       Message: "Invalid username or password",
       User: null,
-      token: null,
+      Token: null,
     });
   }
 };
@@ -47,15 +49,14 @@ const verify = async (req, res, next) => {
       res.json({ Error: true, Message: "Invalid Token" });
     }
   });
-
 };
 
 const isAdministrator = async (req, res, next) => {
-
   //get user role from database
   let results = await userModel.getUserById(req.userId);
 
   if (results[0].role === "admin") {
+    res.json({ Error: false, Message: "Success" });
     next();
   } else {
     res.status(403).json({ Error: true, Message: "Unauthorized" });

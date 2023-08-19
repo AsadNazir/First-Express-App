@@ -8,7 +8,7 @@ export default function Login() {
 
         event.preventDefault();
 
-        let results = await fetch('http://localhost:3000/login', {
+        let results = await fetch('http://localhost:3000/auth/login', {
             method: 'POST',
             body: JSON.stringify({
                 name: document.getElementById('loginName').value,
@@ -21,17 +21,14 @@ export default function Login() {
 
         try {
             let data = await results.json();
-
             if (!data.Error) {
-                
-                    localStorage.setItem('userToken', JSON.stringify(data.Token));
-                    alert(data.Token);
-                    navigate('/home');
-                }
-                else 
-                {
-                    alert(data2.Error);
-                }
+
+                localStorage.setItem('userToken', JSON.stringify(data));
+                navigate('/home');
+            }
+            else {
+                alert(data.Error);
+            }
         }
         catch (err) {
             console.log(err);
