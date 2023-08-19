@@ -1,9 +1,11 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const port = 3000;
-const auth = require("./Controller/AuthController");
+const auth = require("./Middleware/auth");
 const bodyParser = require("body-parser");
 const cors = require("cors"); // Import the cors package
+
 // Allow requests only from specific origins
 app.use(
   cors({
@@ -15,12 +17,12 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
-app.post("/login", auth.login);
 
-app.listen(port, () => {
+require("./Routes/auth.routes")(app);
+require("./Routes/user.routes")(app);
+
+
+app.listen(process.env.SVR_PORT || 3000, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });

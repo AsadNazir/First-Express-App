@@ -1,46 +1,38 @@
 import React from 'react'
 
+
 export default function Register() {
+
+    let register = async (event) => {
+        fetch('http://localhost:3000/register', {
+            method: 'POST',
+            body: JSON.stringify({
+                name: document.getElementById('registerName').value,
+                password: document.getElementById('registerPassword').value,
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .then(data => {
+                if (data.Error) alert(data.Message);
+                else alert("User registered successfully");
+            })
+    }
+
+
+
+
     return (
-        <div class="Register" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
-            <form>
-                <div class="text-center mb-3">
-                    <p>Sign up with:</p>
-                    <button type="button" class="btn btn-link btn-floating mx-1">
-                        <i class="fab fa-facebook-f"></i>
-                    </button>
+        <div class="Register LoginWrapper" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
+            <div>
 
-                    <button type="button" class="btn btn-link btn-floating mx-1">
-                        <i class="fab fa-google"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-link btn-floating mx-1">
-                        <i class="fab fa-twitter"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-link btn-floating mx-1">
-                        <i class="fab fa-github"></i>
-                    </button>
-                </div>
-
-                <p class="text-center">or:</p>
+                <h1 class="text-center">Register</h1>
 
                 {/* <!-- Name input --> */}
                 <div class="form-outline mb-4">
                     <input type="text" id="registerName" class="form-control" />
                     <label class="form-label" for="registerName">Name</label>
-                </div>
-
-                {/* <!-- Username input --> */}
-                <div class="form-outline mb-4">
-                    <input type="text" id="registerUsername" class="form-control" />
-                    <label class="form-label" for="registerUsername">Username</label>
-                </div>
-
-                {/* <!-- Email input --> */}
-                <div class="form-outline mb-4">
-                    <input type="email" id="registerEmail" class="form-control" />
-                    <label class="form-label" for="registerEmail">Email</label>
                 </div>
 
                 {/* <!-- Password input --> */}
@@ -65,8 +57,11 @@ export default function Register() {
                 </div>
 
 
-                <button type="submit" class="btn btn-primary btn-block mb-3">Sign in</button>
-            </form>
+                {/* <!-- Submit button --> */}
+                <div className="btnDiv">
+                    <button onClick={register} class="btn btn-primary btn-block mb-3">Sign in</button>
+                </div>
+            </div>
         </div>
     )
 }

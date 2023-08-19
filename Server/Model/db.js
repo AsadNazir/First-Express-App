@@ -1,9 +1,12 @@
 const db = require("mysql2/promise");
+const host = process.env.DB_HOST;
+const user = process.env.DB_USER;
+const password = process.env.DB_PASSWORD;
 
 const pool = db.createPool({
-    host: "localhost",
-    password: "root",
-    user: "root",
+    host: host,
+    password: password,
+    user: user,
     database: "web",
     waitForConnections: true,
     connectionLimit: 10,
