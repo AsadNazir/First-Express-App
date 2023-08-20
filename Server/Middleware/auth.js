@@ -4,6 +4,23 @@ const jwt = require("jsonwebtoken");
 
 const secretKey = process.env.JWT_SECRET;
 
+const verifyRole = async (req, res, next) => {
+  let token = req.header("Authorization");
+  if(!token) return res.status(401).json({Error: true, Message: "Invalid token"});
+  token = token.replace("Bearer ", "");
+
+  jwt.verify(token, secretKey, (err, decoded) => {
+    if(!err) {
+      res.json({Error: false, Message: "Success", User: decoded});
+      next();
+    } else {
+      res.json({Error: true, Message: "Invalid Token"});
+    }
+  });
+}
+
+
+
 const login = async (req, res) => {
   let results = await userModel.getUserByNameAndPassword(
     req.body.name,
@@ -12,7 +29,7 @@ const login = async (req, res) => {
 
   if (results.length > 0) {
     const token = jwt.sign(
-      { id: results[0].id, name: results[0].name },
+      { id: results[0].id, name: results[0].name, role: results[0].role },
       secretKey,
       { expiresIn: "1h" }
     );
@@ -56,8 +73,8 @@ const isAdministrator = async (req, res, next) => {
   let results = await userModel.getUserById(req.userId);
 
   if (results[0].role === "admin") {
-    res.json({ Error: false, Message: "Success" });
-    next();
+   next();
+
   } else {
     res.status(403).json({ Error: true, Message: "Unauthorized" });
   }
@@ -73,4 +90,4 @@ const register = async (req, res) => {
   }
 };
 
-module.exports = { login, register, verify, isAdministrator };
+module.exports = { login, register, verify, isAdministrator, verifyRole };

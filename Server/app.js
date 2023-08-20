@@ -22,6 +22,8 @@ app.use(bodyParser.json());
 // Routes
 app.use("/auth", require("./Routes/auth.routes")); 
 app.use("/user", require("./Routes/user.routes"));
+app.use("/inventory", require("./Routes/inventory.routes"));
+
 
 app.listen(process.env.SVR_PORT || 3000, () => {
   console.log(`Example app listening at http://localhost:${port}`);
