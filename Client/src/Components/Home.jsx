@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef } from 'react'
 import '../assets/CSS/home.css'
 import { useNavigate } from 'react-router-dom';
 import MainPage from './MainPage';
-
+import Loader from './Loader';
+import { verify } from '../Service/service';
 
 export default function Home() {
 
@@ -10,47 +11,35 @@ export default function Home() {
     const dataFetched = useRef(false);
 
     const [verified, setVerified] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    const verify = async () => {
 
-        let token = JSON.parse(localStorage.getItem('userToken'));
-
-        let results = await fetch('http://localhost:3000/user/home', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token.Token}`
-            }
-        })
-
-        let data = await results.json();
-
-        console.log(data);
-
-        if (data.Error) {
-            alert('You are not authorized to view this page');
-            return;
-        }
-        else
-            setVerified(true);
-
-    }
 
     useEffect(() => {
         if (dataFetched.current) return;
         dataFetched.current = true;
 
-        verify();
-    }, [])
+        let user = verify();
 
+        if (user.Error) {
+            setLoading(false);
+
+            alert('You are not authorized to view this page');
+            navigate('/');
+
+        }
+
+        else {
+            setLoading(false);
+            setVerified(true);
+        }
+    }, []);
 
 
     return (
         <>
-            {verified ?
-                <MainPage/>
-                : <h1>Not Verified</h1>}
+            {loading ? <Loader /> : <MainPage />}
         </>
 
     )
-}
+};

@@ -3,14 +3,11 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { Provider } from 'react-redux'
-import store from './store/user.store.jsx'
 import Login from './Components/Login.jsx'
 import Register from './Components/Register.jsx'
-import Home from './Components/Home.jsx'
 import AddForm from './Components/AddForm.jsx'
-import MainPage from './Components/MainPage.jsx'
 import CardsDisplay from './Components/CardsDisplay.jsx'
+import Home from './Components/home.jsx'
 
 //Main Router Browser Router
 const router = createBrowserRouter([
@@ -48,7 +45,7 @@ const router = createBrowserRouter([
 
 ]);
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <Provider store={store}>
+  <React.StrictMode>
     <RouterProvider router={router} />
-  </Provider>
+  </React.StrictMode>
 )

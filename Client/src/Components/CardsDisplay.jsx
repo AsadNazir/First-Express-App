@@ -2,12 +2,12 @@ import React from 'react'
 import Card from './Card';
 import '../assets/CSS/card.css'
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { verify } from '../Service/service';
 
 export default function CardsDisplay() {
 
     const [Item, setItem] = useState([]);
-
+    const [data, setData] = useState('');
     //Delete fucntion
     const deleteItem = async (id) => {
         let token = JSON.parse(localStorage.getItem('userToken'));
@@ -31,8 +31,6 @@ export default function CardsDisplay() {
     }
 
 
-
-
     //get ALl items API
     const getALlItems = async () => {
         let token = JSON.parse(localStorage.getItem('userToken'));
@@ -49,8 +47,19 @@ export default function CardsDisplay() {
 
     }
 
-
     useEffect(() => {
+
+        verify().then(data => {
+            console.log(data);
+            setData(data);
+            if (data.Error) {
+                alert('You are not authorized to view this page');
+                navigate('/');
+            }
+        })
+
+
+
         getALlItems();
     }, [])
 
@@ -58,7 +67,7 @@ export default function CardsDisplay() {
         <div className='cardCont'>
             {
                 Item.map((item) => {
-                    return <Card key={item.id} item={item} delete={deleteItem}/>
+                    return <Card key={item.id} role={data.Data.User.role} item={item} delete={deleteItem}/>
                 })
             }
         </div>

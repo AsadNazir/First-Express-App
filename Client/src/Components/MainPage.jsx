@@ -1,36 +1,24 @@
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useEffect } from 'react'
 import Navbar from './Navbar'
 import Card from './Card';
 import '../assets/CSS/card.css'
 import { Outlet } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { setUser } from '../store/actions';
+import { verify } from '../Service/service';
+import { useNavigate } from 'react-router-dom';
 
 export default function MainPage() {
-
-    const dispatch = useDispatch();
-    const [role, setRole] = useState('');
-    const getRole = async () => {
-        let token = JSON.parse(localStorage.getItem('userToken'));
-        let res = await fetch('http://localhost:3000/auth/verifyRole', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token.Token}`
-            }
-        })
-
-        let data = await res.json();
-        setRole(data.User.role);
-
-        dispatch(setUser(data.User));
-    }
-
-
+    const navigate = useNavigate()
+    
     useEffect(() => {
-        getRole();
-    }, [])
 
+        let user = verify();
+       user.then(data => {
+              if (data.Error) {
+                    alert('You are not authorized to view this page');
+                    navigate('/');
+                }
+            })
+    }, []);
 
     return (
         <>

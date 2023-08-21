@@ -23,6 +23,8 @@ app.use(bodyParser.json());
 app.use("/auth", require("./Routes/auth.routes")); 
 app.use("/user", require("./Routes/user.routes"));
 app.use("/inventory", require("./Routes/inventory.routes"));
+// app.use("/", require("./Routes/category.routes"));
+// app.use("/", require("./Routes/location.routes"));
 
 
 app.listen(process.env.SVR_PORT || 3000, () => {

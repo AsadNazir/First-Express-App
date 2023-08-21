@@ -10,5 +10,7 @@ router.get('/allItems', [auth.verify], inventoryController.getAllItems);
 router.get('/getItem/:id', [auth.verify], inventoryController.getItemById);
 router.post('/addItem', [auth.verify, auth.isAdministrator], inventoryController.addItem);
 router.delete('/deleteItem/:id', [auth.verify, auth.isAdministrator], inventoryController.deleteItemById);
+router.use('/',[auth.verify], require("./category.routes"));
+router.use('/', [auth.verify], require("./location.routes"));
 
 module.exports = router;

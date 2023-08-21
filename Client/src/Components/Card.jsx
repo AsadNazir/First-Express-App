@@ -1,10 +1,12 @@
 import React from 'react'
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react' 
 
 export default function Card(props) {
 
-    const user = useSelector(state => state.user);
-
+    useEffect(() => {
+        console.log(props)
+    }, [])
+    
     return (
         <div className="card">
             <div className="card-body">
@@ -16,7 +18,7 @@ export default function Card(props) {
                     <div><b className="card-text">Category : </b> {props.item.location_name}</div>
                 </div>
                 {
-                    props.role === user.role ? <a onClick={() => props.delete(props.item.id)} className="btn btn-danger">
+                    "admin" === props.role ? <a onClick={() => props.delete(props.item.id)} className="btn btn-danger">
                         Delete
                     </a> : ""
                 }
